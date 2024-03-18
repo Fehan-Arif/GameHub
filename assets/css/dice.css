@@ -37,7 +37,7 @@ h1 {
 /* Banner Section */
 .banner {
   grid-area: banner;
-  display: none;
+  /* display: none; */
 }
 
 .banner-content {
@@ -151,9 +151,12 @@ h1 {
 
 
 .popup, .player1, .player2, .player3, .player4 {
-  display: none;
+  /* display: none; */
 }
 
+.play-content {
+  display: none;
+}
 
 
 /**/
