@@ -217,3 +217,17 @@ h2 {
   justify-content: center;
   align-items: center;
 }
+
+.game-card a {
+  text-decoration: none;
+  color: #000;
+  /* margin: 0 -.25rem; */
+  padding: 2px;
+  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+
+.game-card a:hover {
+  /* text-decoration: underline; */
+  box-shadow: inset 120px 0 0 0 #507335;
+  color: white;
+}
