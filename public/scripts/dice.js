@@ -2,7 +2,7 @@
 const playersButton = document.querySelectorAll(".playersButton");
 const beginContent = document.querySelector(".begin-content");
 const playContent = document.querySelector(".play-content");
-const scoreBoard = document.querySelector(".scoreboard");
+const scoreBoard = document.querySelector(".scoreboard-container");
 const btnRoll = document.querySelector(".btn-roll");
 const resetButton = document.querySelector(".btn-restart");
 
@@ -17,17 +17,18 @@ function Player(id, name, hasRolled, score) {
   this.score = score;
   this.rollDie = function() {
     return Math.floor(Math.random() * 6) + 1;
-  }
+  };
   this.createScoreBoard = function() {
     // create a new div element
     const resultDiv = document.createElement("div");
 
     resultDiv.classList.add("results");
     // and give it some content
-    resultDiv.innerHTML = "<h3>" + name + "</h3><hr><br /><span>" + this.score + "</span>";
+    resultDiv.innerHTML =
+      "<h3>" + name + " : <span> " + this.score + "</span></h3>";
     // add the text node to the newly created div
     scoreBoard.appendChild(resultDiv);
-  }
+  };
 }
 
 // Use Players Button to Get Number of players
@@ -45,6 +46,7 @@ function getPlayers() {
       }
       beginContent.style.display = "none";
       playContent.style.display = "block";
+      scoreBoard.style.visibility = "visible";
     });
   }
 }
@@ -68,15 +70,21 @@ function rollDie() {
       const resultDiv = document.createElement("div");
       resultDiv.classList.add("results");
       // and give it some content
-      resultDiv.innerHTML = "<h3>" + element.name + "</h3><hr><br /><span>" + element.score + "</span>";
+      resultDiv.innerHTML =
+        "<h3>" +
+        element.name +
+        ": <span> " +
+        element.score +
+        "</span></h3>";
       // add the text node to the newly created div
       scoreBoard.appendChild(resultDiv);
     }
     if (maxObject) {
       // console.log(`Object with highest value: ${maxObject} (Value: ${maxValue})`);
-      document.querySelector(".banner-content").innerHTML = `<h1>${maxObject} wins!</h1>`;
+      document.querySelector(".banner-content").innerHTML =
+        `<h1>${maxObject} wins!</h1>`;
     } else {
-      console.log('No objects found.');
+      console.log("No objects found.");
     }
   });
 }
