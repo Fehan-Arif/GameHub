@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dice Game</title>
+  <link href="https://db.onlinewebfonts.com/c/82b778d1b069157bf6b2e32dc4e1e3f1?family=Neue+Machina" rel="stylesheet" />
+  <link href="../public/styles/dice.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="game-wrapper">
+    <section class="banner">
+      <div class="banner-content">
+        <h1>Start Game</h1>
+      </div>
+    </section>
+    <section class="scoreboard">
+      <div class="scoreboard-container">
+        <div class="scoreboard-header">
+          <h2>Score</h2>
+        </div>
+        <hr />
+        <div class="scorecard"></div>
+      </div>
+    </section>
+    <section class="middle">
+      <div class="middle-flex">
+        <!-- <div class="middle-container"></div> -->
+        <!-- Begining Content -->
+        <div class="begin-content">
+          <h1>Choose number of players</h1>
+          <div class="number-of-players">
+            <button type="button" class="btn playersButton">One</button>
+            <button type="button" class="btn playersButton">Two</button>
+            <button type="button" class="btn playersButton">Three</button>
+            <button type="button" class="btn playersButton">Four</button>
+          </div>
+        </div>
+        <!-- End .begin-content -->
+        <div class="play-content">
+          <h1>Roll Dice</h1>
+          <div class="roll-buttons">
+            <button type="button" class="btn btn-roll">Roll</button>
+            <button type="button" class="btn btn-restart">Reset</button>
+          </div>
+        </div>
+      </div>
+      <!-- Start Dice Game -->
+    </section>
+  </div>
+  <!-- .game-wrapper -->
+  <!-- <button type="button" class="btn-roll-dice">Roll Dice</button> -->
+
+  <script src="../public/scripts/dice.js"></script>
+</body>
+
+</html>
