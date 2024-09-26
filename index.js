@@ -24,6 +24,14 @@ app.get("/", (req, res) => {
     console.log(error);
   }
 });
+app.get("/navigation", (req, res) => {
+  try {
+    res.render("navigation.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
 //=====================
 //  Listener
 //=====================
