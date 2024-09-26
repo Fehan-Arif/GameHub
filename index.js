@@ -6,12 +6,18 @@ import express from "express";
 //  Constants
 //=====================
 const app = express(),
-	  port = 3000;
+  port = 3000;
+//=====================
+//  Middleware
+//=====================
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.set("view engine", "ejs");
 //=====================
 //  Routes
 //=====================
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+  res.send("Hello World!");
 });
 //=====================
 //  Listener
