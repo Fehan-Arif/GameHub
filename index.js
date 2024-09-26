@@ -17,7 +17,12 @@ app.set("view engine", "ejs");
 //  Routes
 //=====================
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  try {
+    res.render("index.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
 });
 //=====================
 //  Listener
