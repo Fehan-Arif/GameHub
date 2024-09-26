@@ -32,6 +32,14 @@ app.get("/navigation", (req, res) => {
     console.log(error);
   }
 });
+app.get("/dice", (req, res) => {
+  try {
+    res.render("dice.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
 //=====================
 //  Listener
 //=====================
