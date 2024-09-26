@@ -40,6 +40,14 @@ app.get("/dice", (req, res) => {
     console.log(error);
   }
 });
+app.get("/trivia", (req, res) => {
+  try {
+    res.render("trivia.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
 //=====================
 //  Listener
 //=====================
