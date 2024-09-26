@@ -1,0 +1,28 @@
+{
+  "name": "gamehub",
+  "version": "1.0.0",
+  "description": "A node application consisting of multiple games based on js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Fehan-Arif/GameHub.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "NodeJS",
+    "Game"
+  ],
+  "author": "Fehan Arif",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fehan-Arif/GameHub/issues"
+  },
+  "homepage": "https://github.com/Fehan-Arif/GameHub#readme",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
