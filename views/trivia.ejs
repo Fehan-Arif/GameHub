@@ -1,0 +1,46 @@
+  <%- include("partials/dice-header.ejs") %>
+  <div class="game-wrapper">
+    <section class="banner">
+      <div class="banner-content">
+        <h1>Start Game</h1>
+      </div>
+    </section>
+    <section class="scoreboard">
+      <div class="scoreboard-container">
+        <div class="scoreboard-header">
+          <h2>Score</h2>
+        </div>
+        <hr />
+        <div class="scorecard"></div>
+      </div>
+    </section>
+    <section class="middle">
+      <div class="middle-flex">
+        <!-- <div class="middle-container"></div> -->
+        <!-- Begining Content -->
+        <div class="begin-content">
+          <h1><%= q1.question %></h1>
+          <div class="number-of-players">
+            <button type="button" class="btn playersButton">One</button>
+            <button type="button" class="btn playersButton">Two</button>
+            <button type="button" class="btn playersButton">Three</button>
+            <button type="button" class="btn playersButton">Four</button>
+          </div>
+        </div>
+        <!-- End .begin-content -->
+        <div class="play-content">
+          <h1>Roll Dice</h1>
+          <div class="roll-buttons">
+            <button type="button" class="btn btn-roll">Roll</button>
+            <button type="button" class="btn btn-restart">Reset</button>
+          </div>
+        </div>
+      </div>
+      <!-- Start Dice Game -->
+    </section>
+  </div>
+  <!-- .game-wrapper -->
+  <!-- <button type="button" class="btn-roll-dice">Roll Dice</button> -->
+
+  <script src="/scripts/dice.js"></script>
+  <%- include("partials/footer.ejs") %>
