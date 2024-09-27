@@ -53,29 +53,27 @@ app.get("/trivia", async (req, res) => {
   }
   try {
     let result = await axios.get(API_KEY); // Create a buffer from the string
-    let results = result.data.results;
-    // Constructs
-    let q1 = new Trivia(
-      1,
-      Buffer.from(results[0].question, "base64").toString("ascii"),
-      Buffer.from(results[0].correct_answer, "base64").toString("ascii"),
-      [
-        Buffer.from(results[0].incorrect_answers[0], "base64").toString(
-          "ascii",
-        ),
-        Buffer.from(results[0].incorrect_answers[1], "base64").toString(
-          "ascii",
-        ),
-        Buffer.from(results[0].incorrect_answers[2], "base64").toString(
-          "ascii",
-        ),
-      ],
-    );
+    let results = result.data.results; // This is an array with objects
+    let triviaArray = []; // Array to hold all Trivia objects
 
-    // let resultsObj = new Buffer.from(results, "base64").toString("ascii");
-    // res.render("trivia.ejs", { content: results });
-    res.render("trivia.ejs", { content: results, q1: q1 });
-    console.log(q1);
+    // Constructs
+    for (let i = 0; i < results.length; i++) {
+      let triviaObj = new Trivia(
+        i + 1,
+        Buffer.from(results[i].question, "base64").toString("ascii"),
+        Buffer.from(results[i].correct_answer, "base64").toString("ascii"),
+        results[i].incorrect_answers.map((answer) =>
+          Buffer.from(answer, "base64").toString("ascii"),
+        ),
+      );
+      triviaArray.push(triviaObj);
+    }
+
+    // Send the array of Trivia objects as a single response
+    res.render("trivia.ejs", { content: JSON.stringify(triviaArray) });
+
+    // For debugging, you can log the entire array
+    console.log(JSON.stringify(triviaArray));
   } catch (error) {
     res.status(500).send("Something went wrong.");
     console.log(error);
