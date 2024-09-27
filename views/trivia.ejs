@@ -1,46 +1,138 @@
-  <%- include("partials/dice-header.ejs") %>
+<%- include("partials/dice-header.ejs") %>
   <div class="game-wrapper">
-    <section class="banner">
-      <div class="banner-content">
-        <h1>Start Game</h1>
-      </div>
-    </section>
-    <section class="scoreboard">
-      <div class="scoreboard-container">
-        <div class="scoreboard-header">
-          <h2>Score</h2>
+    <% let triviaContent=JSON.parse(content); %>
+      <span id="question-Number" hidden>
+        <%= triviaContent[0].id %>
+      </span>
+      <section class="banner">
+        <div class="banner-content">
+          <h1>Start Game</h1>
         </div>
-        <hr />
-        <div class="scorecard"></div>
-      </div>
-    </section>
-    <section class="middle">
-      <div class="middle-flex">
-        <!-- <div class="middle-container"></div> -->
-        <!-- Begining Content -->
-        <div class="begin-content">
-          <h1><%= q1.question %></h1>
-          <div class="number-of-players">
-            <button type="button" class="btn playersButton">One</button>
-            <button type="button" class="btn playersButton">Two</button>
-            <button type="button" class="btn playersButton">Three</button>
-            <button type="button" class="btn playersButton">Four</button>
+      </section>
+      <section class="scoreboard">
+        <div class="scoreboard-container trivia">
+          <div class="scoreboard-header">
+            <h2>Score</h2>
           </div>
+          <hr />
+          <div class="scorecard"></div>
         </div>
-        <!-- End .begin-content -->
-        <div class="play-content">
-          <h1>Roll Dice</h1>
-          <div class="roll-buttons">
-            <button type="button" class="btn btn-roll">Roll</button>
-            <button type="button" class="btn btn-restart">Reset</button>
+      </section>
+      <section class="middle">
+        <div class="middle-flex trivia">
+          <!-- <div class="middle-container"></div> -->
+          <!-- Begining Content -->
+          <div class="trivia-content">
+            <p class="trivia-question" id="trivia-question">
+              <%= triviaContent[0].question %>
+            </p>
           </div>
+          <div hidden id="answer">
+            <%= triviaContent[0].correct_answer %>
+          </div>
+          <% function shuffle(array) { for (let i=array.length - 1; i> 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+            } %>
+            <span id="shuffle-function" hidden>
+              <% let answers=[triviaContent[0].correct_answer, ...triviaContent[0].incorrect_answers]; %>
+            </span>
+            <% let shuffledAnswers=shuffle(answers);%>
+
+              <div class="trivia-choices" id="trivia-choices">
+                <% shuffledAnswers.forEach(answer=> { %>
+                  <button type="button" class="btn trivia">
+                    <%= answer %>
+                  </button>
+                  <% }); %>
+              </div>
+              <!-- End .begin-content -->
         </div>
-      </div>
-      <!-- Start Dice Game -->
-    </section>
+        <!-- Start Dice Game -->
+      </section>
   </div>
   <!-- .game-wrapper -->
-  <!-- <button type="button" class="btn-roll-dice">Roll Dice</button> -->
 
-  <script src="/scripts/dice.js"></script>
+  <script>
+    let idNum = 0; // Initialize question index
+
+    // JavaScript function to change the question
+    function changeQuestion() {
+      // score(this);
+      let answer = document.querySelector("#answer");
+      let questionNumber = document.querySelector("#question-Number");
+      let scoreBoard = document.querySelector(".scoreboard-container");
+      if (this.innerText === answer.innerText) {
+        const resultDiv = document.createElement("div");
+        resultDiv.classList.add("results");
+        resultDiv.innerHTML = "<h3>Question " + questionNumber.innerHTML + ": <span>Correct"
+        "</span></h3>";
+        scoreBoard.appendChild(resultDiv);
+        document.querySelector(".banner-content").innerHTML =
+          `<h1>That's Correct!</h1>`;
+      } else {
+        const resultDiv = document.createElement("div");
+        resultDiv.classList.add("results");
+        // and give it some content
+        resultDiv.innerHTML =
+          "<h3>Question " +
+          questionNumber.innerHTML +
+          ": <span>Incorrect"
+        "</span></h3>";
+        scoreBoard.appendChild(resultDiv);
+        document.querySelector(".banner-content").innerHTML =
+          `<h1>That's Wrong!</h1>`;
+      }
+      console.log(answer.innerText);
+      console.log(this.innerText);
+      let triviaContent = <% - JSON.stringify(triviaContent) %>;
+      // Change Question id
+      idNum++;
+      console.log(triviaContent.length);
+      console.log(idNum);
+      if (idNum === triviaContent.length) {
+        document.getElementById('trivia-choices').style.display = "none";
+        console.log("game over");
+      } else {
+        document.querySelector("#question-Number").innerText = triviaContent[idNum].id;
+        // Update question text
+        document.getElementById('trivia-question').innerText = triviaContent[idNum].question;
+
+        // Update Answer
+        document.querySelector("#answer").innerText = triviaContent[idNum].correct_answer;
+
+        // Update hidden shuffle function content
+        let shuffleFunction = document.querySelector("#shuffle-function");
+        let answers = [triviaContent[idNum].correct_answer, ...triviaContent[idNum].incorrect_answers];
+        shuffleFunction.innerText = JSON.stringify(answers);
+
+        // Shuffle answers and update buttons
+        let shuffledAnswers = shuffle(answers);
+        let triviaChoicesDiv = document.getElementById('trivia-choices');
+        triviaChoicesDiv.innerHTML = ''; // Clear existing buttons
+        shuffledAnswers.forEach(answer => {
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'btn trivia';
+          button.innerText = answer;
+          button.addEventListener('click', changeQuestion); // Add event listener to each button
+          triviaChoicesDiv.appendChild(button);
+        });
+      }
+
+
+    }
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    document.querySelectorAll('.btn.trivia').forEach(button => {
+      button.addEventListener('click', changeQuestion);
+    });
+  </script>
   <%- include("partials/footer.ejs") %>
