@@ -2,11 +2,14 @@
 //  Imports
 //=====================
 import express from "express";
+import axios from "axios";
 //=====================
 //  Constants
 //=====================
 const app = express(),
-  port = 3000;
+  port = 3000,
+  API_KEY =
+    "https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple&encode=base64";
 //=====================
 //  Middleware
 //=====================
