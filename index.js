@@ -6,10 +6,9 @@ import axios from "axios";
 //=====================
 //  Constants
 //=====================
-const app = express(),
-  port = 3000,
-  API_KEY =
-    "https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple&encode=base64";
+const app = express();
+const port = process.env.PORT;
+const API_KEY = process.env.API_KEY;
 //=====================
 //  Middleware
 //=====================
