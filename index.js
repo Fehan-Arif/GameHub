@@ -65,6 +65,14 @@ app.get("/dice", (req, res) => {
     console.log(error);
   }
 });
+app.get("/flags", (req, res) => {
+  try {
+    res.render("flags.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
 app.get("/trivia", async (req, res) => {
   // Add constructor function
   function Trivia(id, question, correct_answer, incorrect_answers) {
