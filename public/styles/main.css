@@ -294,3 +294,34 @@ h2 {
   box-shadow: inset 120px 0 0 0 #507335;
   color: white;
 }
+
+@media only screen and (max-width: 1100px) {
+  .choice-header {
+    padding: 0 4rem;
+  }
+}
+@media only screen and (max-width: 930px) {
+  .choice-wrapper {
+    height: 150svh;
+    align-content: space-evenly;
+  }
+  .choice-header {
+    padding: 0 2rem;
+    text-align: center;
+  }
+  .choice-header h1 {
+    font-size: 3rem;
+  }
+  .game-cards-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .choice-header {
+    padding: 0 1rem;
+  }
+  .choice-header h1 {
+    font-size: 2rem;
+  }
+}
