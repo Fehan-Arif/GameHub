@@ -4,21 +4,16 @@
       <h1>Choose Your Game</h1>
     </div>
     <div class="game-cards-grid">
-      <div class="game-card">
-        <img src="images/coming-soon.jpg" alt="Memory Game Image" />
-        <h3>Memory Game</h3>
-        <p>A memory testing game.</p>
-      </div>
-      <div class="game-card">
-        <img src="images/dice.jpg" alt="Dice Image" />
-        <h3><a href="dice">Dice Game</a></h3>
-        <p>A memory testing game.</p>
-      </div>
-      <div class="game-card">
-        <img src="images/trivia.jpg" alt="Trivia Image" />
-        <h3><a href="trivia">Trivia Game</a></h3>
-        <p>A trivia game using the Open Trivia database API</p>
-      </div>
+      <% games.forEach(game=> { %>
+        <div class="game-card">
+          <img src="images/<%= game.link; %>.jpg" alt="<%= game.alt; %>" />
+          <h3><a href="<%= game.link; %>">
+              <%= game.title; %>
+            </a></h3>
+          <p>
+            <%= game.description; %>
+          </p>
+        </div>
+        <% }); %>
     </div>
-  </div>
-<%- include("partials/footer.ejs") %>
+    <%- include("partials/footer.ejs") %>

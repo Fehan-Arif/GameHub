@@ -27,8 +27,31 @@ app.get("/", (req, res) => {
   }
 });
 app.get("/navigation", (req, res) => {
+  let games = [
+    {
+      id: 1,
+      link: "dice",
+      title: "Dice",
+      alt: "Dice Image",
+      description: "Test Your Lucks",
+    },
+    {
+      id: 2,
+      link: "flags",
+      title: "Flags",
+      alt: "Flags Image",
+      description: "Test your Knowledge of Flags",
+    },
+    {
+      id: 3,
+      link: "trivia",
+      title: "Trivia",
+      alt: "Trivia Image",
+      description: "Play Some Trivia",
+    },
+  ];
   try {
-    res.render("navigation.ejs");
+    res.render("navigation.ejs", { games: games });
   } catch (error) {
     res.status(500).send("Something went wrong.");
     console.log(error);
