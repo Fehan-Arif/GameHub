@@ -57,9 +57,29 @@ app.get("/navigation", (req, res) => {
     console.log(error);
   }
 });
-app.get("/dice", (req, res) => {
+app.get("/:game", (req, res) => {
+  let gameType = req.params.game;
+  let playerCount = req.query.playerCount;
+  console.log(gameType, playerCount);
+  if (gameType === "dice") {
+    try {
+      res.render("games.ejs", { gameType: gameType, playerCount: playerCount });
+      console.log(data);
+    } catch (error) {
+      res.status(500).send("Something went wrong.");
+      // console.log(error);
+    }
+  } else {
+    console.log(gameType);
+  }
+});
+app.post("/choosePlayers", async (req, res) => {
+  const { gameType, playerCount } = req.body;
+  res.redirect(`/${gameType}?playerCount=${playerCount}`);
+});
+app.get("/game", (req, res) => {
   try {
-    res.render("dice.ejs");
+    res.render("games.ejs");
   } catch (error) {
     res.status(500).send("Something went wrong.");
     console.log(error);
