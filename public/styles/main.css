@@ -300,28 +300,204 @@ h2 {
     padding: 0 4rem;
   }
 }
+
 @media only screen and (max-width: 930px) {
   .choice-wrapper {
     height: 150svh;
     align-content: space-evenly;
   }
+
   .choice-header {
     padding: 0 2rem;
     text-align: center;
   }
+
   .choice-header h1 {
     font-size: 3rem;
   }
+
   .game-cards-grid {
     flex-direction: column;
     gap: 30px;
   }
 }
+
 @media only screen and (max-width: 600px) {
   .choice-header {
     padding: 0 1rem;
   }
+
   .choice-header h1 {
     font-size: 2rem;
   }
+}
+
+/* Game CSS */
+
+.game-wrapper {
+  background-color: #74a050;
+  font-family: "Neue Machina";
+  display: grid;
+  height: 100vh;
+  grid-template:
+    "banner banner"
+    "scoreboard middle";
+  grid-template-columns: 0.2fr auto;
+  grid-template-rows: 0.2fr auto;
+}
+
+#scoreboard {
+  /* height: 100%; */
+  width: 100%;
+  /* background-color: blue; */
+  grid-area: scoreboard;
+}
+
+#banner {
+  /* height: 100%; */
+  width: 100%;
+  /* background-color: yellow; */
+  grid-area: banner;
+}
+
+#middle {
+  /* height: 100%; */
+  width: 100%;
+  /* background-color: red; */
+  grid-area: middle;
+}
+
+/* Scoreboard */
+hr {
+  color: white;
+  border-top-width: 0;
+  border-bottom-width: 5px;
+}
+
+.scoreboard-container {
+  /* display: flex; */
+  padding: 0 10px;
+}
+
+.scoreboard-header {
+  text-align: center;
+}
+
+.scoreboard-header h2 {
+  margin-bottom: 0px;
+}
+
+/* Banner */
+.banner-content {
+  display: flex;
+  justify-content: center;
+}
+
+.banner-content h1 {
+  margin-bottom: 0;
+}
+
+/* Middle */
+#middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-flex {
+  border: 10px #fff solid;
+  position: absolute;
+  top: 27%;
+  left: 28%;
+  margin-top: -50px;
+  margin-left: -50px;
+  width: 900px;
+  height: 500px;
+}
+
+@media only screen and (min-width: 2080px) {
+  .middle-flex {
+    left: 31%;
+  }
+}
+
+@media only screen and (max-width: 1290px) {
+  .middle-flex {
+    left: 25%;
+    width: 710px;
+    height: 459px;
+  }
+}
+
+@media only screen and (max-width: 940px) {
+  .middle-flex {
+    left: 33%;
+    width: 400px;
+    height: 358px;
+    top: 39%;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .banner-content h1 {
+    font-size: 2rem;
+  }
+
+  .scoreboard-header h2 {
+    font-size: 1rem;
+  }
+
+  #scoreboard {
+    order: 3;
+    width: 50%;
+    margin-top: 20px;
+  }
+
+  #banner {
+    order: 1;
+  }
+
+  #middle {
+    order: 2;
+    margin-top: 20px;
+    border: #fff 10px solid;
+    width: 50%;
+    height: 50%;
+  }
+
+  .middle-flex {
+    left: 0;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    border: none;
+  }
+}
+
+/* Middle flex game container */
+.number-of-players,
+.roll-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.begin-content {
+  align-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.begin-content h2 {
+  font-size: 3rem;
+  margin-bottom: 10%;
+}
+
+.middle-flex {
+  display: flex;
 }
