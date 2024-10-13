@@ -468,7 +468,7 @@ hr {
     margin-top: 20px;
     border: #fff 10px solid;
     width: 50%;
-    height: 50%;
+    height: 60%;
   }
 
   .middle-flex {
@@ -484,10 +484,15 @@ hr {
 .number-of-players,
 .roll-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
-.begin-content {
+.btn-roll {
+  /* z-index: 1; */
+}
+
+.begin-content,
+.play-content {
   align-content: center;
   text-align: center;
   width: 100%;
@@ -500,4 +505,41 @@ hr {
 
 .middle-flex {
   display: flex;
+}
+
+/* for Dice */
+.play-content {
+  display: none;
+}
+
+@media only screen and (max-width: 940px) {
+  .middle-flex {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .begin-content h2 {
+    font-size: 2rem;
+  }
+
+  .play-content h1 {
+    font-size: 3rem;
+  }
+
+  .number-of-players,
+  .roll-buttons {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .begin-content h2 {
+    font-size: 2rem;
+  }
+
+  .middle-flex {
+    position: static;
+    margin: 0;
+    width: 100%;
+  }
 }
