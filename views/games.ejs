@@ -17,25 +17,33 @@
           <% } %>
       </div>
     </section>
-    <section id="middle">
+    <section id="middle" class="<%= gameType %>">
       <div class="middle-flex">
-        <div class="begin-content">
-          <!-- Dice Game -->
-          <% if (locals.gameType==="dice" ) { %>
+        <!-- Dice Game -->
+        <% if (locals.gameType==="dice" ) { %>
+          <div class="begin-content">
             <h2>Choose number of players</h2>
-            <form action="/choosePlayers" method="post" class="number-of-players">
-              <input type="hidden" name="gameType" value="dice" />
-              <button type="submit" name="playerCount" value="1" class="btn playersButton">One</button>
-              <button type="submit" name="playerCount" value="2" class="btn playersButton">Two</button>
-              <button type="submit" name="playerCount" value="3" class="btn playersButton">Three</button>
-              <button type="submit" name="playerCount" value="4" class="btn playersButton">Four</button>
-            </form>
-            <% } %>
-        </div>
+            <div class="number-of-players">
+              <button type="button" class="btn playersButton">One</button>
+              <button type="button" class="btn playersButton">Two</button>
+              <button type="button" class="btn playersButton">Three</button>
+              <button type="button" class="btn playersButton">Four</button>
+            </div>
+          </div>
+          <div class="play-content">
+            <h1>Roll Dice</h1>
+            <div class="roll-buttons">
+              <button type="button" class="btn btn-roll">Roll</button>
+              <button type="button" class="btn btn-restart">Reset</button>
+            </div>
+          </div>
+          <% } %>
       </div>
     </section>
   </div>
   <footer>
-    <script src="/scripts/dice.js"></script>
+    <% if (locals.gameType==="dice" ) { %>
+      <script src="/scripts/dice.js"></script>
+      <% } %>
   </footer>
   <%- include("partials/footer.ejs") %>
