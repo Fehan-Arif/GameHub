@@ -1,0 +1,41 @@
+<%- include("partials/header.ejs") %>
+  <div class="game-wrapper">
+    <section id="scoreboard">
+      <div class="scoreboard-container">
+        <div class="scoreboard-header">
+          <h2>Score</h2>
+        </div>
+        <hr />
+        <div class="scorecard"></div>
+      </div>
+    </section>
+    <section id="banner">
+      <div class="banner-content">
+        <% if (locals.gameType) { %>
+          <h1>Play <%= gameType.toUpperCase() %>
+          </h1>
+          <% } %>
+      </div>
+    </section>
+    <section id="middle">
+      <div class="middle-flex">
+        <div class="begin-content">
+          <!-- Dice Game -->
+          <% if (locals.gameType==="dice" ) { %>
+            <h2>Choose number of players</h2>
+            <form action="/choosePlayers" method="post" class="number-of-players">
+              <input type="hidden" name="gameType" value="dice" />
+              <button type="submit" name="playerCount" value="1" class="btn playersButton">One</button>
+              <button type="submit" name="playerCount" value="2" class="btn playersButton">Two</button>
+              <button type="submit" name="playerCount" value="3" class="btn playersButton">Three</button>
+              <button type="submit" name="playerCount" value="4" class="btn playersButton">Four</button>
+            </form>
+            <% } %>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer>
+    <script src="/scripts/dice.js"></script>
+  </footer>
+  <%- include("partials/footer.ejs") %>
