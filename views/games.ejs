@@ -11,39 +11,53 @@
     </section>
     <section id="banner">
       <div class="banner-content">
-        <% if (locals.gameType) { %>
-          <h1>Play <%= gameType.toUpperCase() %>
+        <% if (!locals.choice) { %>
+          <h1>Play <%= gameType.toUpperCase(); %>
           </h1>
-          <% } %>
+          <% } else { %>
+            <% if (gameType==="dice" ) { %>
+              <h1>Roll <%= gameType.toUpperCase(); %>
+              </h1>
+              <% } else { %>
+                <h1>Choose Answer</h1>
+                <% } %>
+                  <% } %>
       </div>
     </section>
     <section id="middle" class="<%= gameType %>">
       <div class="middle-flex">
         <!-- Dice Game -->
-        <% if (locals.gameType==="dice" ) { %>
-          <div class="begin-content">
-            <h2>Choose number of players</h2>
+        <form action="/<%= gameType; %>/play" method="post" class="gamePlay">
+          <% if (startGame===false) { %>
+            <input type="text" name="gameType" value="<%= gameType; %>" hidden>
+            <h2>
+              <%= choiceQuestion; %>
+            </h2>
             <div class="number-of-players">
-              <button type="button" class="btn playersButton">One</button>
-              <button type="button" class="btn playersButton">Two</button>
-              <button type="button" class="btn playersButton">Three</button>
-              <button type="button" class="btn playersButton">Four</button>
+              <% gameChoice.forEach(choice=> { %>
+                <button type="submit" class="btn playersButton" value="<%= choice.intValue; %>" name="choice">
+                  <%= choice.stringValue; %>
+                </button>
+                <% }); %>
             </div>
-          </div>
-          <div class="play-content">
-            <h1>Roll Dice</h1>
-            <div class="roll-buttons">
-              <button type="button" class="btn btn-roll">Roll</button>
-              <button type="button" class="btn btn-restart">Reset</button>
-            </div>
-          </div>
-          <% } %>
+            <% } else { %>
+              <input type="text" name="gameType" value="<%= gameType; %>" hidden>
+              <input type="text" name="choice" value="<%= choice %>" hidden>
+              <h1>
+                <%= gameQuestion; %>
+              </h1>
+              <div class="answers">
+                <% answers.forEach(answer=> { %>
+                  <button type="submit" class="btn btn-answer" name="<%= answer.name; %>" value="True">
+                    <%= answer.value; %>
+                  </button>
+                  <% }); %>
+              </div>
+              <% } %>
+        </form>
       </div>
     </section>
   </div>
   <footer>
-    <% if (locals.gameType==="dice" ) { %>
-      <script src="/scripts/dice.js"></script>
-      <% } %>
   </footer>
   <%- include("partials/footer.ejs") %>

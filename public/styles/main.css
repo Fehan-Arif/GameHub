@@ -482,7 +482,7 @@ hr {
 
 /* Middle flex game container */
 .number-of-players,
-.roll-buttons {
+.answers {
   display: flex;
   justify-content: space-evenly;
 }
@@ -491,14 +491,13 @@ hr {
   /* z-index: 1; */
 }
 
-.begin-content,
-.play-content {
+.gamePlay {
   align-content: center;
   text-align: center;
   width: 100%;
 }
 
-.begin-content h2 {
+.gamePlay h2 {
   font-size: 3rem;
   margin-bottom: 10%;
 }
@@ -508,9 +507,9 @@ hr {
 }
 
 /* for Dice */
-.play-content {
-  display: none;
-}
+/* .play-content { */
+/*   display: none; */
+/* } */
 
 @media only screen and (max-width: 940px) {
   .middle-flex {
@@ -518,7 +517,7 @@ hr {
     flex-direction: column;
   }
 
-  .begin-content h2 {
+  .gamePlay h2 {
     font-size: 2rem;
   }
 
@@ -527,13 +526,13 @@ hr {
   }
 
   .number-of-players,
-  .roll-buttons {
+  .answers {
     flex-direction: column;
   }
 }
 
 @media only screen and (max-width: 680px) {
-  .begin-content h2 {
+  .gamePlay h2 {
     font-size: 2rem;
   }
 
