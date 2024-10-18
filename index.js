@@ -15,6 +15,26 @@ const API_KEY = process.env.API_KEY;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+
+// Variables
+let diceGameChoice = [
+  {
+    stringValue: "One",
+    intValue: 1,
+  },
+  {
+    stringValue: "Two",
+    intValue: 2,
+  },
+  {
+    stringValue: "Three",
+    intValue: 3,
+  },
+  {
+    stringValue: "Four",
+    intValue: 4,
+  },
+];
 //=====================
 //  Routes
 //=====================
@@ -61,25 +81,8 @@ app.get("/:game", async (req, res) => {
   let gameType = req.params.game;
   if (gameType === "dice") {
     try {
-      let gameChoice = [
-        {
-          stringValue: "One",
-          intValue: 1,
-        },
-        {
-          stringValue: "Two",
-          intValue: 2,
-        },
-        {
-          stringValue: "Three",
-          intValue: 3,
-        },
-        {
-          stringValue: "Four",
-          intValue: 4,
-        },
-      ];
       let startGame = false;
+      let gameChoice = diceGameChoice;
       let choiceQuestion = "Choose Number of Players";
       res.render("games.ejs", {
         gameType: gameType,
@@ -130,71 +133,63 @@ app.get("/:game", async (req, res) => {
 });
 
 app.post("/:game/play", async (req, res) => {
-  console.log(req.body);
   let gameType = req.body.gameType;
   let choice = req.body.choice;
-  let startGame = true;
-  let gameQuestion = "Roll Dice";
-  let choiceQuestion = "Choose Number of Players";
-  let gameChoice = [
-    {
-      stringValue: "One",
-      intValue: 1,
-    },
-    {
-      stringValue: "Two",
-      intValue: 2,
-    },
-    {
-      stringValue: "Three",
-      intValue: 3,
-    },
-    {
-      stringValue: "Four",
-      intValue: 4,
-    },
-  ];
-  let answers = [
-    { name: "roll", value: "Roll" },
-    { name: "reset", value: "Reset" },
-  ];
-  if (req.body.roll === "True") {
-    rollDie(choice);
+  if (gameType === "dice") {
+    let choiceQuestion = "Choose Number of Players";
+    let gameQuestion = "Roll Dice";
+    let gameChoice = diceGameChoice;
+    let startGame = true;
+    let playerScore = [];
+    let answers = [
+      { name: "roll", value: "Roll" },
+      { name: "reset", value: "Reset" },
+    ];
+    if (req.body.roll === "True") {
+      rollDie(choice, playerScore);
+      console.log(playerScore);
+    }
+    if (req.body.reset === "True") {
+      startGame = false;
+    }
+    let winner = getWinner(playerScore);
+    try {
+      res.render("games.ejs", {
+        gameType: gameType,
+        choice: choice,
+        startGame: startGame,
+        gameQuestion: gameQuestion,
+        answers: answers,
+        choiceQuestion: choiceQuestion,
+        gameChoice: gameChoice,
+        playerScore: playerScore,
+        winner: winner,
+      });
+    } catch (err) {
+      res.status(500).send("Something went wrong.");
+      console.log(error);
+    }
   }
-  if (req.body.reset === "True") {
-    startGame = false;
-  }
-  // console.log(startGame);
-  res.render("games.ejs", {
-    gameType: gameType,
-    choice: choice,
-    startGame: startGame,
-    gameQuestion: gameQuestion,
-    answers: answers,
-    choiceQuestion: choiceQuestion,
-    gameChoice: gameChoice,
-  });
 });
 
-function rollDie(numPlayers) {
+function rollDie(numPlayers, playerScore) {
   for (let index = 1; index <= numPlayers; index++) {
-    console.log(`Player ${index} got:`);
+    let die = Math.floor(Math.random() * 6) + 1;
+    playerScore.push({ name: index, score: die });
   }
+  return playerScore;
+}
+function getWinner(playerScore) {
+  if (playerScore.length === 0) return null;
+  let winner = playerScore[0];
+  for (let i = 1; i < playerScore.length; i++) {
+    if (playerScore[i].score > winner.score) {
+      winner = playerScore[i];
+    }
+  }
+  return winner;
 }
 
-function resetGame() {
-  let startGame = false;
-  return startGame;
-}
-
-// app.get("/flags", (req, res) => {
-//   try {
-//     res.render("flags.ejs");
-//   } catch (error) {
-//     res.status(500).send("Something went wrong.");
-//     console.log(error);
-//   }
-// });
 // app.get("/trivia", async (req, res) => {
 //   // Add constructor function
 //   function Trivia(id, question, correct_answer, incorrect_answers) {
