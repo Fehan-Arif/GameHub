@@ -60,193 +60,8 @@ let isGameInitialized = false;
 let currentQuestion = 0;
 let playerScore = [{ name: 1, score: 0 }];
 //=====================
-//  Routes
+// Functions
 //=====================
-app.get("/", (req, res) => {
-  try {
-    res.render("index.ejs");
-  } catch (error) {
-    res.status(500).send("Something went wrong.");
-    console.log(error);
-  }
-});
-app.get("/navigation", (req, res) => {
-  let games = [
-    {
-      id: 1,
-      link: "dice",
-      title: "Dice",
-      alt: "Dice Image",
-      description: "Test Your Lucks",
-    },
-    {
-      id: 2,
-      link: "flags",
-      title: "Flags",
-      alt: "Flags Image",
-      description: "Test your Knowledge of Flags",
-    },
-    {
-      id: 3,
-      link: "trivia",
-      title: "Trivia",
-      alt: "Trivia Image",
-      description: "Play Some Trivia",
-    },
-  ];
-  try {
-    res.render("navigation.ejs", { games: games });
-  } catch (error) {
-    res.status(500).send("Something went wrong.");
-    console.log(error);
-  }
-});
-app.get("/:game", async (req, res) => {
-  let gameType = req.params.game;
-  let startGame = false;
-  if (gameType === "dice") {
-    try {
-      let gameChoice = diceGameChoice;
-      let choiceQuestion = "Choose Number of Players";
-      res.render("games.ejs", {
-        gameType: gameType,
-        gameChoice: gameChoice,
-        choiceQuestion: choiceQuestion,
-        startGame: startGame,
-      });
-    } catch (error) {
-      res.status(500).send("Something went wrong.");
-      console.log(error);
-    }
-  } else if (gameType === "trivia") {
-    try {
-      let gameChoice = triviaGameChoice;
-      let choiceQuestion = "Choose Number of Questions";
-      res.render("games.ejs", {
-        gameType: gameType,
-        gameChoice: gameChoice,
-        choiceQuestion: choiceQuestion,
-        startGame: startGame,
-      });
-      // For debugging, you can log the entire array
-    } catch (error) {
-      res.status(500).send("Something went wrong.");
-      console.log(error);
-    }
-  }
-});
-
-app.post("/:game/play", async (req, res) => {
-  let gameType = req.body.gameType;
-  let choice = req.body.choice;
-  let startGame = true;
-  if (gameType === "dice") {
-    try {
-      let choiceQuestion = "Choose Number of Players";
-      let gameQuestion = "Roll Dice";
-      let gameChoice = diceGameChoice;
-      let playerScore = [];
-      let answers = [
-        { name: "roll", value: "Roll" },
-        { name: "reset", value: "Reset" },
-      ];
-      if (req.body.roll === "True") {
-        rollDie(choice, playerScore);
-        console.log(playerScore);
-      }
-      if (req.body.reset === "True") {
-        startGame = false;
-      }
-      console.log(req.body);
-      let winner = getWinner(playerScore);
-      res.render("games.ejs", {
-        answers: answers,
-        choice: choice,
-        choiceQuestion: choiceQuestion,
-        gameChoice: gameChoice,
-        gameQuestion: gameQuestion,
-        gameType: gameType,
-        playerScore: playerScore,
-        startGame: startGame,
-        winner: winner,
-      });
-    } catch (err) {
-      res.status(500).send("Something went wrong.");
-      console.log(err);
-    }
-  } else if (gameType === "trivia") {
-    try {
-      let gameType = req.body.gameType;
-      let choice = req.body.choice;
-      let startGame = true;
-
-      if (gameType === "trivia") {
-        let choice = parseInt(req.body.choice);
-        let gameChoice = triviaGameChoice;
-        let choiceQuestion = "Choose Your Answer";
-
-        // Check if the reset button was pressed
-        if (req.body.name === "Reset") {
-          // isGameInitialized = false; // Set the game as not initialized
-          return res.redirect(`/${gameType}`);
-        }
-
-        // Initialize game only if not initialized or reset
-        if (!isGameInitialized) {
-          let result = await axios.get(apiGen(choice));
-          let results = result.data.results;
-          triviaArray = createTriviaArray(results);
-          isGameInitialized = true;
-          currentQuestion = 0; // Reset current question index
-          playerScore = [{ name: 1, score: 0 }]; // Reset player score
-        }
-
-        let correctAnswer =
-          currentQuestion < triviaArray.length
-            ? triviaArray[currentQuestion].correct_answer
-            : "";
-        let userAnswer = req.body.name;
-
-        if (
-          userAnswer &&
-          userAnswer !== "Reset" &&
-          currentQuestion < triviaArray.length
-        ) {
-          checkAnswer(correctAnswer, userAnswer, playerScore);
-        }
-
-        let winner = gameOver(triviaArray, currentQuestion, playerScore);
-        let answers =
-          currentQuestion < triviaArray.length
-            ? getAnswers(triviaArray, currentQuestion)
-            : [{ name: "reset", value: "Reset" }];
-        let gameQuestion =
-          currentQuestion < triviaArray.length
-            ? getTriviaQuestion(triviaArray, currentQuestion)
-            : "Game Over";
-
-        console.log(correctAnswer);
-
-        res.render("games.ejs", {
-          answers: answers,
-          choice: choice,
-          choiceQuestion:
-            currentQuestion < triviaArray.length ? "Choose Your Answer" : "",
-          gameChoice: triviaGameChoice,
-          gameQuestion: gameQuestion,
-          gameType: gameType,
-          playerScore: playerScore,
-          startGame: startGame,
-          winner: winner,
-        });
-      }
-    } catch (err) {
-      res.status(500).send("Something went wrong.");
-      console.log(err);
-    }
-  }
-});
-
 function rollDie(numPlayers, playerScore) {
   for (let index = 1; index <= numPlayers; index++) {
     let die = Math.floor(Math.random() * 6) + 1;
@@ -345,6 +160,191 @@ function gameOver(triviaArray, currentQuestion, playerScore) {
   }
   return null;
 }
+async function handleDiceGame(req, res) {
+  let choiceQuestion = "Choose Number of Players";
+  let gameQuestion = "Roll Dice";
+  let gameChoice = diceGameChoice;
+  let playerScore = [];
+  let answers = [
+    { name: "roll", value: "Roll" },
+    { name: "reset", value: "Reset" },
+  ];
+
+  if (req.body.roll === "True") {
+    rollDie(req.body.choice, playerScore);
+    console.log(playerScore);
+  }
+
+  if (req.body.reset === "True") {
+    return res.redirect(`/${req.body.gameType}`);
+  }
+
+  console.log(req.body);
+  let winner = getWinner(playerScore);
+  res.render("games.ejs", {
+    answers: answers,
+    choice: req.body.choice,
+    choiceQuestion: choiceQuestion,
+    gameChoice: gameChoice,
+    gameQuestion: gameQuestion,
+    gameType: req.body.gameType,
+    playerScore: playerScore,
+    startGame: true,
+    winner: winner,
+  });
+}
+
+async function handleTriviaGame(req, res) {
+  let choice = parseInt(req.body.choice);
+  let gameChoice = triviaGameChoice;
+  let choiceQuestion = "Choose Your Answer";
+
+  // Check if the reset button was pressed
+  if (req.body.name === "Reset") {
+    return res.redirect(`/${req.body.gameType}`);
+  }
+
+  // Initialize game only if not initialized or reset
+  if (!isGameInitialized) {
+    let result = await axios.get(apiGen(choice));
+    let results = result.data.results;
+    triviaArray = createTriviaArray(results);
+    isGameInitialized = true;
+    currentQuestion = 0; // Reset current question index
+    playerScore = [{ name: 1, score: 0 }]; // Reset player score
+  }
+
+  let correctAnswer =
+    currentQuestion < triviaArray.length
+      ? triviaArray[currentQuestion].correct_answer
+      : "";
+  let userAnswer = req.body.name;
+
+  if (
+    userAnswer &&
+    userAnswer !== "Reset" &&
+    currentQuestion < triviaArray.length
+  ) {
+    checkAnswer(correctAnswer, userAnswer, playerScore);
+  }
+
+  let winner = gameOver(triviaArray, currentQuestion, playerScore);
+  let answers =
+    currentQuestion < triviaArray.length
+      ? getAnswers(triviaArray, currentQuestion)
+      : [{ name: "reset", value: "Reset" }];
+  let gameQuestion =
+    currentQuestion < triviaArray.length
+      ? getTriviaQuestion(triviaArray, currentQuestion)
+      : "Game Over";
+
+  // console.log(triviaArray);
+  res.render("games.ejs", {
+    answers: answers,
+    choice: choice,
+    choiceQuestion:
+      currentQuestion < triviaArray.length ? "Choose Your Answer" : "",
+    gameChoice: gameChoice,
+    gameQuestion: gameQuestion,
+    gameType: req.body.gameType,
+    playerScore: playerScore,
+    startGame: true,
+    winner: winner,
+  });
+}
+//=====================
+//  Routes
+//=====================
+app.get("/", (req, res) => {
+  try {
+    res.render("index.ejs");
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
+app.get("/navigation", (req, res) => {
+  let games = [
+    {
+      id: 1,
+      link: "dice",
+      title: "Dice",
+      alt: "Dice Image",
+      description: "Test Your Lucks",
+    },
+    {
+      id: 2,
+      link: "flags",
+      title: "Flags",
+      alt: "Flags Image",
+      description: "Test your Knowledge of Flags",
+    },
+    {
+      id: 3,
+      link: "trivia",
+      title: "Trivia",
+      alt: "Trivia Image",
+      description: "Play Some Trivia",
+    },
+  ];
+  try {
+    res.render("navigation.ejs", { games: games });
+  } catch (error) {
+    res.status(500).send("Something went wrong.");
+    console.log(error);
+  }
+});
+app.get("/:game", async (req, res) => {
+  let gameType = req.params.game;
+  let startGame = false;
+  if (gameType === "dice") {
+    try {
+      let gameChoice = diceGameChoice;
+      let choiceQuestion = "Choose Number of Players";
+      res.render("games.ejs", {
+        gameType: gameType,
+        gameChoice: gameChoice,
+        choiceQuestion: choiceQuestion,
+        startGame: startGame,
+      });
+    } catch (error) {
+      res.status(500).send("Something went wrong.");
+      console.log(error);
+    }
+  } else if (gameType === "trivia") {
+    try {
+      let gameChoice = triviaGameChoice;
+      let choiceQuestion = "Choose Number of Questions";
+      res.render("games.ejs", {
+        gameType: gameType,
+        gameChoice: gameChoice,
+        choiceQuestion: choiceQuestion,
+        startGame: startGame,
+      });
+      // For debugging, you can log the entire array
+    } catch (error) {
+      res.status(500).send("Something went wrong.");
+      console.log(error);
+    }
+  }
+});
+
+app.post("/:game/play", async (req, res) => {
+  let gameType = req.body.gameType;
+  try {
+    if (gameType === "dice") {
+      await handleDiceGame(req, res);
+    } else if (gameType === "trivia") {
+      await handleTriviaGame(req, res);
+    } else {
+      res.status(400).send("Unsupported game type");
+    }
+  } catch (err) {
+    res.status(500).send("Something went wrong.");
+    console.log(err);
+  }
+});
+
 //=====================
 //  Listener
 //=====================
