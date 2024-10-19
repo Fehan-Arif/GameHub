@@ -506,6 +506,10 @@ hr {
   display: flex;
 }
 
+.gamePlay h1 {
+  font-size: 3rem;
+}
+
 /* for Dice */
 /* .play-content { */
 /*   display: none; */
@@ -521,7 +525,7 @@ hr {
     font-size: 2rem;
   }
 
-  .play-content h1 {
+  .gamePlay h1 {
     font-size: 3rem;
   }
 
