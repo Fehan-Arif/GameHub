@@ -4,12 +4,20 @@
 import express from "express";
 import axios from "axios";
 import "dotenv/config";
+import pg from "pg";
 //=====================
 //  Constants
 //=====================
 const app = express();
 const port = process.env.PORT;
-// const API_KEY = process.env.API_KEY;
+const db = new pg.Client({
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  port: process.env.DBPORT,
+});
+db.connect();
 //=====================
 //  Middleware
 //=====================
@@ -55,10 +63,30 @@ let triviaGameChoice = [
     intValue: 40,
   },
 ];
+let flagGameChoice = [
+  {
+    stringValue: "Five",
+    intValue: 5,
+  },
+  {
+    stringValue: "Ten",
+    intValue: 10,
+  },
+  {
+    stringValue: "Fifteen",
+    intValue: 15,
+  },
+  {
+    stringValue: "Twenty",
+    intValue: 20,
+  },
+];
 let triviaArray = [];
 let isGameInitialized = false;
 let currentQuestion = 0;
 let playerScore = [{ name: 1, score: 0 }];
+let currentQuestionIndex = 0;
+let questions = [];
 //=====================
 // Functions
 //=====================
@@ -160,6 +188,67 @@ function gameOver(triviaArray, currentQuestion, playerScore) {
   }
   return null;
 }
+async function generateQuestions(choice) {
+  // Fetch data from the database
+  const result = await db.query("SELECT * FROM flags;");
+  const usedIDs = new Set();
+  const questions = [];
+
+  for (let i = 0; i < choice; i++) {
+    // Generate a unique random ID
+    let randomID;
+    do {
+      randomID = Math.floor(Math.random() * result.rows.length) + 1;
+    } while (usedIDs.has(randomID));
+
+    usedIDs.add(randomID);
+
+    // Get the data for the current question
+    const currentFlag = result.rows.find((row) => row.id === randomID);
+    if (!currentFlag) {
+      continue; // Skip this iteration if no flag is found
+    }
+
+    const correctAnswer = currentFlag.name;
+
+    // Get three incorrect answers
+    const incorrectAnswers = [];
+    while (incorrectAnswers.length < 3) {
+      let incorrectID;
+      do {
+        incorrectID = Math.floor(Math.random() * result.rows.length) + 1;
+      } while (
+        incorrectID === randomID ||
+        incorrectAnswers.includes(
+          result.rows.find((row) => row.id === incorrectID)?.name,
+        )
+      );
+
+      const incorrectFlag = result.rows.find((row) => row.id === incorrectID);
+      if (incorrectFlag && incorrectFlag.name) {
+        incorrectAnswers.push(incorrectFlag.name);
+      }
+    }
+
+    // Create the question object
+    let question = {
+      question: `Which country's flag is this? '${currentFlag.flag}'`,
+      correctAnswer: correctAnswer,
+      answers: [
+        { name: correctAnswer, value: correctAnswer },
+        ...incorrectAnswers.map((answer) => ({ name: answer, value: answer })),
+      ].sort(() => Math.random() - 0.5), // Randomize answers order
+    };
+
+    questions.push(question);
+  }
+
+  return questions;
+}
+async function initializeQuestions(choice) {
+  questions = await generateQuestions(choice);
+}
+
 async function handleDiceGame(req, res) {
   let choiceQuestion = "Choose Number of Players";
   let gameQuestion = "Roll Dice";
@@ -252,6 +341,68 @@ async function handleTriviaGame(req, res) {
     winner: winner,
   });
 }
+// Flag game
+async function handleFlagGame(req, res) {
+  let choice = parseInt(req.body.choice);
+  let gameChoice = flagGameChoice;
+  let choiceQuestion = "Choose Your Answer";
+
+  // Check if the reset button was pressed
+  if (req.body.name === "Reset") {
+    // Ensure all game states are reset
+    isGameInitialized = false;
+    questions = []; // Clear questions
+    currentQuestionIndex = 0; // Reset current question index
+    playerScore = [{ name: 1, score: 0 }]; // Reset player score
+    return res.redirect(`/${req.body.gameType}`);
+  }
+
+  // Initialize game only if not initialized or reset
+  if (!isGameInitialized) {
+    questions = await generateQuestions(choice);
+    isGameInitialized = true;
+    currentQuestionIndex = 0; // Reset current question index
+    playerScore = [{ name: 1, score: 0 }]; // Reset player score
+  }
+
+  let userAnswer = req.body.name;
+  if (
+    userAnswer &&
+    userAnswer !== "Reset" &&
+    currentQuestionIndex < questions.length
+  ) {
+    let currentQuestion = questions[currentQuestionIndex];
+    if (userAnswer === currentQuestion.correctAnswer) {
+      playerScore[0].score++; // Increment player score if correct
+    }
+    currentQuestionIndex++; // Move to the next question
+  }
+
+  // Determine if game is over
+  let isGameOver = currentQuestionIndex >= questions.length;
+  let answers = isGameOver
+    ? [{ name: "reset", value: "Reset" }]
+    : questions[currentQuestionIndex].answers;
+  let gameQuestion = isGameOver
+    ? "Game Over"
+    : questions[currentQuestionIndex].question;
+  let winner = isGameOver
+    ? `Player got ${playerScore[0].score} out of ${questions.length}`
+    : null;
+
+  res.render("games.ejs", {
+    answers: answers,
+    choice: choice,
+    choiceQuestion:
+      currentQuestionIndex < questions.length ? "Choose Your Answer" : "",
+    gameChoice: gameChoice,
+    gameQuestion: gameQuestion,
+    gameType: req.body.gameType,
+    playerScore: playerScore,
+    startGame: true,
+    winner: winner,
+  });
+}
 //=====================
 //  Routes
 //=====================
@@ -326,6 +477,20 @@ app.get("/:game", async (req, res) => {
       res.status(500).send("Something went wrong.");
       console.log(error);
     }
+  } else if (gameType === "flags") {
+    try {
+      let gameChoice = flagGameChoice;
+      let choiceQuestion = "Choose Number of Questions";
+      res.render("games.ejs", {
+        gameType: gameType,
+        gameChoice: gameChoice,
+        choiceQuestion: choiceQuestion,
+        startGame: startGame,
+      });
+    } catch (error) {
+      res.status(500).send("Something went wrong.");
+      console.log(error);
+    }
   }
 });
 
@@ -336,6 +501,12 @@ app.post("/:game/play", async (req, res) => {
       await handleDiceGame(req, res);
     } else if (gameType === "trivia") {
       await handleTriviaGame(req, res);
+    } else if (gameType === "flags") {
+      if (!isGameInitialized) {
+        await initializeQuestions(parseInt(req.body.choice));
+        isGameInitialized = true;
+      }
+      await handleFlagGame(req, res);
     } else {
       res.status(400).send("Unsupported game type");
     }
