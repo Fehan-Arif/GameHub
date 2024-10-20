@@ -20,7 +20,7 @@
       <% } else if(locals.winner) { %>
       <% if (gameType==='dice') { %>
       <h1>Player <%= winner.name; %> Wins!</h1>
-      <% } else if (gameType ==='trivia') { %>
+      <% } else if (gameType ==='trivia' || gameType === 'flags') { %>
       <h1><%= winner; %></h1>
       <% } %>
       <% } else { %> <% if (gameType==="dice" ) { %>
@@ -66,7 +66,7 @@
           </button>
           <% }); %>
         </div>
-        <% } else if(gameType === 'trivia'){ %>
+        <% } else if(gameType === 'trivia' || gameType === 'flags'){ %>
         <div class="answers">
           <% answers.forEach(answer=> { %>
           <button
