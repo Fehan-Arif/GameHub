@@ -129,3 +129,20 @@ hr {
     0 12px 16px 0 rgba(80, 115, 53, 0.74),
     0 17px 50px 0 rgba(80, 115, 53, 0.19);
 }
+
+/* Trivia */
+.middle-flex.trivia{
+  flex-direction: column;
+  text-align: center;
+}
+.trivia-choices {
+  display: flex;
+  justify-content: space-evenly;
+}
+.btn.trivia{
+  padding: 15px 18px;
+  font-size: 18px;
+}
+.scoreboard-container.trivia{
+  visibility: visible;
+}

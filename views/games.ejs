@@ -1,0 +1,89 @@
+<%- include("partials/header.ejs") %>
+<div class="game-wrapper">
+  <section id="scoreboard">
+    <div class="scoreboard-container">
+      <div class="scoreboard-header">
+        <h2>Score</h2>
+      </div>
+      <hr />
+      <div class="scorecard">
+        <% if (locals.playerScore) { %> <% playerScore.forEach(player=> { %>
+        <h3>Player <%= player.name %>: <%= player.score %></h3>
+        <% }); %> <% } %>
+      </div>
+    </div>
+  </section>
+  <section id="banner">
+    <div class="banner-content">
+      <% if (locals.startGame === false) { %>
+      <h1>Play <%= gameType.toUpperCase(); %></h1>
+      <% } else if(locals.winner) { %>
+      <% if (gameType==='dice') { %>
+      <h1>Player <%= winner.name; %> Wins!</h1>
+      <% } else if (gameType ==='trivia' || gameType === 'flags') { %>
+      <h1><%= winner; %></h1>
+      <% } %>
+      <% } else { %> <% if (gameType==="dice" ) { %>
+      <h1>Roll <%= gameType.toUpperCase(); %></h1>
+      <% } else { %>
+      <h1>Choose Answer</h1>
+      <% } %> <% } %>
+    </div>
+  </section>
+  <section id="middle" class="<%= gameType %>">
+    <div class="middle-flex">
+      <!-- Dice Game -->
+      <form action="/<%= gameType; %>/play" method="post" class="gamePlay">
+        <% if (locals.startGame===false) { %>
+        <input type="text" name="gameType" value="<%= gameType; %>" hidden />
+        <h2><%= choiceQuestion; %></h2>
+        <div class="number-of-players">
+          <% gameChoice.forEach(choice=> { %>
+          <button
+            type="submit"
+            class="btn playersButton"
+            value="<%= choice.intValue; %>"
+            name="choice"
+          >
+            <%= choice.stringValue; %>
+          </button>
+          <% }); %>
+        </div>
+        <% } else { %>
+        <input type="text" name="gameType" value="<%= gameType; %>" hidden />
+        <input type="text" name="choice" value="<%= choice %>" hidden />
+        <h1><%= gameQuestion; %></h1>
+        <% if (gameType === 'dice') { %>
+        <div class="answers">
+          <% answers.forEach(answer=> { %>
+          <button
+            type="submit"
+            class="btn btn-answer"
+            name="<%= answer.name; %>"
+            value="True"
+          >
+            <%= answer.value; %>
+          </button>
+          <% }); %>
+        </div>
+        <% } else if(gameType === 'trivia' || gameType === 'flags'){ %>
+        <div class="answers">
+          <% answers.forEach(answer=> { %>
+          <button
+            type="submit"
+            class="btn btn-answer"
+            name="name"
+            value="<%= answer.value %>"
+          >
+            <%= answer.value; %>
+          </button>
+          <% }); %>
+        </div>
+        <% } %>
+        <% } %>
+      </form>
+    </div>
+  </section>
+</div>
+<footer></footer>
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,19 @@
+<%- include("partials/header.ejs") %>
+  <div class="choice-wrapper">
+    <div class="choice-header">
+      <h1>Choose Your Game</h1>
+    </div>
+    <div class="game-cards-grid">
+      <% games.forEach(game=> { %>
+        <div class="game-card">
+          <img src="images/<%= game.link; %>.jpg" alt="<%= game.alt; %>" />
+          <h3><a href="<%= game.link; %>">
+              <%= game.title; %>
+            </a></h3>
+          <p>
+            <%= game.description; %>
+          </p>
+        </div>
+        <% }); %>
+    </div>
+    <%- include("partials/footer.ejs") %>

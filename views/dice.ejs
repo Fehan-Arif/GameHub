@@ -1,15 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dice Game</title>
-  <link href="https://db.onlinewebfonts.com/c/82b778d1b069157bf6b2e32dc4e1e3f1?family=Neue+Machina" rel="stylesheet" />
-  <link href="../public/styles/dice.css" rel="stylesheet" />
-</head>
-
-<body>
+  <%- include("partials/dice-header.ejs") %>
   <div class="game-wrapper">
     <section class="banner">
       <div class="banner-content">
@@ -53,7 +42,5 @@
   <!-- .game-wrapper -->
   <!-- <button type="button" class="btn-roll-dice">Roll Dice</button> -->
 
-  <script src="../public/scripts/dice.js"></script>
-</body>
-
-</html>
+  <script src="/scripts/dice.js"></script>
+  <%- include("partials/footer.ejs") %>

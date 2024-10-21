@@ -1,15 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GameHub</title>
-  <link href="https://db.onlinewebfonts.com/c/82b778d1b069157bf6b2e32dc4e1e3f1?family=Neue+Machina" rel="stylesheet" />
-  <link href="public/styles/main.css" rel="stylesheet" />
-</head>
-
-<body>
+<%- include("partials/header.ejs") %>
   <div class="wrapper">
     <!-- Healthbar -->
     <div class="healthbar">
@@ -27,15 +16,13 @@
     <section id="hero">
       <div class="hero-container">
         <h1 class="welcome">Welcome</h1>
-        <h2>Click <u>Start</u> Begin</h2>
+        <h2>Click <u>Start</u> to Begin</h2>
       </div>
     </section>
     <!-- Buttons -->
     <div class="buttons">
-      <a class="btn" href="views/navigation.html">Start</a>
+      <a class="btn" href="navigation">Start</a>
       <button type="button" class="btn">Menu</button>
     </div>
   </div>
-</body>
-
-</html>
+<%- include("partials/footer.ejs") %>
