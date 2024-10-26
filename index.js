@@ -290,6 +290,7 @@ async function handleTriviaGame(req, res) {
 
   // Check if the reset button was pressed
   if (req.body.name === "Reset") {
+    isGameInitialized = false;
     return res.redirect(`/${req.body.gameType}`);
   }
 
